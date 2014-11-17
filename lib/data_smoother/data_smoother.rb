@@ -19,7 +19,13 @@ module DataSmoother
 
       #work out closest inputs
       output[:labels].each_with_index do |label, i|
-        distances = input_data.map { |date, score| {date: date, score: score, distance: (label - date).abs.to_i} }
+        distances = input_data.map { |date, score|
+          {
+              date: date,
+              score: score,
+              distance: (label - date).abs.to_i
+          }
+        }
         distances.keep_if { |e| e[:distance] < (interval / 2) }
         # puts distances
         avg_score = distances.inject(0) { |sum, e| sum += e[:score] } / (distances.length) unless distances.empty?
@@ -33,7 +39,12 @@ module DataSmoother
         improvements << right[:score] - left[:score] unless left[:score].nil? || right[:score].nil?
       end
 
-      avg_improvement = improvements.inject(:+) / improvements.length
+      if improvements.empty?
+        avg_improvement = 0
+      else
+        avg_improvement = improvements.inject(:+) / improvements.length
+      end
+
 
       #extrapolate
       if extrapolate

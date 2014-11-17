@@ -49,6 +49,40 @@ module DataSmoother
       assert_equal expected_data, actual_data
     end
 
+    def test_extrapolated_smoothing_with_dates
+
+      expected_data = {
+          labels: [
+              Date.new(2014, 1, 1),
+              Date.new(2014, 1, 1) + (1 * Rational(91, 3)),
+              Date.new(2014, 1, 1) + (2 * Rational(91, 3)),
+              Date.new(2014, 1, 1) + (3 * Rational(91, 3)),
+              Date.new(2014, 1, 1) + (4 * Rational(91, 3)),
+              Date.new(2014, 1, 1) + (5 * Rational(91, 3)),
+              Date.new(2014, 1, 1) + (6 * Rational(91, 3)),
+              Date.new(2014, 1, 1) + (7 * Rational(91, 3)),
+              Date.new(2014, 1, 1) + (8 * Rational(91, 3)),
+              Date.new(2014, 1, 1) + (9 * Rational(91, 3)),
+          ],
+          ideal_score: [1, 4, 9, 16, 25, 36, 49, 64, 81, 100],
+          data: [
+              {score: 0, input_used: [{date: Date.new(2014, 1, 1), score: 0, distance: 0}]},
+              {score: 0, extrapolated: true},
+              {score: 0, extrapolated: true},
+              {score: 0, extrapolated: true},
+              {score: 0, extrapolated: true},
+              {score: 0, extrapolated: true},
+              {score: 0, extrapolated: true},
+              {score: 0, extrapolated: true},
+              {score: 0, extrapolated: true},
+              {score: 0, extrapolated: true}
+          ]}
+
+
+      actual_data = DataSmoother.smooth(Date.new(2014,1,1), Date.new(2014,10,1), {Date.new(2014,1,1) => 0}, true)
+      assert_equal expected_data, actual_data
+    end
+
     def test_extrapolated_smoothing
 
       input_data = {
